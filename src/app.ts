@@ -1,5 +1,6 @@
 import express, { Request, Response } from 'express';
 import mongoose from 'mongoose';
+import cors from 'cors';
 import cookieParser from 'cookie-parser';
 import usersRouter from './routes/users';
 import cardsRouter from './routes/cards';
@@ -19,6 +20,10 @@ app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 app.use(limiter);
 app.use(requestLogger);
+app.use(cors({
+  origin: 'https://danielmesto.students.nomorepartiessbs.ru',
+  credentials: true,
+}));
 app.use((req, res, next) => {
   if (req.method === 'OPTIONS') {
     res.header('Access-Control-Allow-Origin', 'https://danielmesto.students.nomorepartiessbs.ru');
