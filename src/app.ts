@@ -19,6 +19,15 @@ app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 app.use(limiter);
 app.use(requestLogger);
+app.use((req, res, next) => {
+  if (req.method === 'OPTIONS') {
+    res.header('Access-Control-Allow-Origin', 'https://danielmesto.students.nomorepartiessbs.ru');
+    res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
+    res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+    return res.status(200).send();
+  }
+  next();
+});
 
 mongoose.connect('mongodb://localhost:27017/mestodb');
 
