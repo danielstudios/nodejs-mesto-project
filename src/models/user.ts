@@ -43,7 +43,8 @@ const userSchema = new Schema<IUser>({
     default: 'https://pictures.s3.yandex.net/resources/jacques-cousteau_1604399756.png',
     validate: {
       validator(v) {
-        const urlPattern = /^(https?:\/\/)(www\.)?([a-zA-Z0-9-]+\.[a-zA-Z]{2,})(\/[a-zA-Z0-9-._~:/?#[\]@!$&'()*+,;=]*)?#?$/;
+        if (!v) return true;
+        const urlPattern = /^(https?:\/\/)?(www\.)?([a-zA-Z0-9-]+\.)+[a-zA-Z]{2,}(:\d{1,5})?([-a-zA-Z0-9._~:/?#[\]@!$&'()*+,;=%]*)?$/;
         return urlPattern.test(v);
       },
       message: (props) => `${props.value} ссылка на аватар не валидная`,
