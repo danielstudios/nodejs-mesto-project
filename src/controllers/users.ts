@@ -125,7 +125,7 @@ export const login = (req: Request, res: Response, next: NextFunction) => {
               maxAge: 3600000 * 24 * 7,
               httpOnly: true,
             })
-            .send({ data: token })
+            .send(token)
         });
     })
     .catch(next);
