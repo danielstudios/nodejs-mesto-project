@@ -20,7 +20,7 @@ const cardSchema = new Schema<ICard>({
     required: [true, 'Поле "link" должно быть заполнено'],
     validate: {
       validator(v) {
-        const urlPattern = /^(https?:\/\/)(www\.)?([a-zA-Z0-9-]+\.[a-zA-Z]{2,})(\/[a-zA-Z0-9-._~:/?#[\]@!$&'()*+,;=]*)?#?$/;
+        const urlPattern = /^(https?:\/\/)?(www\.)?([a-zA-Z0-9-]+\.)+[a-zA-Z]{2,}(:\d{1,5})?([-a-zA-Z0-9._~:/?#[\]@!$&'()*+,;=%]*)?$/;
         return urlPattern.test(v);
       },
       message: (props) => `${props.value} ссылка на аватар не валидная`,
