@@ -26,7 +26,7 @@ export const getUserById = (req: Request, res: Response, next: NextFunction) => 
         throw new ServerError(NOT_FOUND_ERROR_CODE, 'Пользователь по указанному _id не найден');
       }
 
-      res.send({ data: user });
+      res.send(user);
     })
     .catch(next);
 };
@@ -63,12 +63,21 @@ export const updateUserProfile = (req: UserRequest, res: Response, next: NextFun
     .then((user) => {
       if (!user) {
         throw new ServerError(NOT_FOUND_ERROR_CODE, 'Пользователь с указанным _id не найден');
-      } else if (user._id !== req.user?._id) {
+      } else if (user._id.toString() !== req.user?._id) {
         throw new ServerError(FORBIDDEN_ERROR_CODE, 'Доступ к запрашиваему ресурсу ограничен');
       }
 
-      User.updateOne({ _id: user._id }, { name, about }, { new: true, runValidators: true })
-        .then((updatedUser) => res.send({ data: updatedUser }));
+        User.findOneAndUpdate(
+          { _id: user._id },
+          { name, about },
+          { new: true, runValidators: true }
+        )
+          .then((updatedUser) => {
+            if (!updatedUser) {
+              return res.status(404).send({ message: 'Пользователь не найден' });
+            }
+            res.send(updatedUser);
+          })
     })
     .catch((err) => {
       if (err?.name === 'ValidationError') {
@@ -93,7 +102,7 @@ export const updateUserAvatar = (req: UserRequest, res: Response, next: NextFunc
         { avatar: req.body.avatar },
         { new: true, runValidators: true },
       )
-        .then((updatedUser) => res.send({ data: updatedUser }));
+        .then((updatedUser) => res.send(updatedUser));
     })
     .catch((err) => {
       if (err?.name === 'ValidationError') {
@@ -138,7 +147,7 @@ export const getUserInfo = (req: UserRequest, res: Response, next: NextFunction)
         throw new ServerError(NOT_FOUND_ERROR_CODE, 'Пользователь с таким id не найден');
       }
 
-      res.send({ data: user });
+      res.send(user);
     })
     .catch(next);
 };

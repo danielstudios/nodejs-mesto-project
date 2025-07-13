@@ -11,7 +11,7 @@ import {
 
 export const getCards = (req: Request, res: Response, next: NextFunction) => {
   Card.find({})
-    .then((card) => res.send({ data: card }))
+    .then((card) => res.send(card))
     .catch(next);
 };
 
@@ -19,7 +19,7 @@ export const createCard = (req: UserRequest, res: Response, next: NextFunction) 
   const { name, link } = req.body;
 
   Card.create({ name, link, owner: req.user?._id })
-    .then((card) => res.status(CREATED_SUCCESS_CODE).send({ data: card }))
+    .then((card) => res.status(CREATED_SUCCESS_CODE).send(card))
     .catch((err) => {
       if (err?.name === 'ValidationError') {
         res.status(INCORRECT_DATA_ERROR_CODE).send({ message: 'Переданы некорректные данные при создании карточки' });
@@ -34,13 +34,13 @@ export const deleteCard = (req: UserRequest, res: Response, next: NextFunction) 
     .then((card) => {
       if (!card) {
         throw new ServerError(NOT_FOUND_ERROR_CODE, 'Карточка с указанным _id не найдена');
-      } else if (card.owner !== req.user?._id) {
+      } else if (card.owner.toString() !== req.user?._id) {
         throw new ServerError(FORBIDDEN_ERROR_CODE, 'Доступ к запрашиваему ресурсу ограничен');
       } else {
         Card.deleteOne({ _id: req.params.cardId });
       }
 
-      res.send({ data: card });
+      res.send(card);
     })
     .catch(next);
 };
@@ -56,7 +56,7 @@ export const dislikeCard = (req: UserRequest, res: Response, next: NextFunction)
         throw new ServerError(NOT_FOUND_ERROR_CODE, 'Передан несуществующий _id карточки');
       }
 
-      res.send({ data: card });
+      res.send(card);
     })
     .catch((err) => {
       if (err?.name === 'ValidationError') {
@@ -78,7 +78,7 @@ export const likeCard = (req: UserRequest, res: Response, next: NextFunction) =>
         throw new ServerError(NOT_FOUND_ERROR_CODE, 'Передан несуществующий _id карточки');
       }
 
-      res.send({ data: card });
+      res.send(card);
     })
     .catch((err) => {
       if (err?.name === 'ValidationError') {

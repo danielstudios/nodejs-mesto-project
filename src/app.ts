@@ -21,12 +21,12 @@ app.use(cookieParser());
 app.use(limiter);
 app.use(requestLogger);
 app.use(cors({
-  origin: 'https://danielmesto.students.nomorepartiessbs.ru',
+  origin: 'http://localhost:3001',
   credentials: true,
 }));
 app.use((req, res, next) => {
   if (req.method === 'OPTIONS') {
-    res.header('Access-Control-Allow-Origin', 'https://danielmesto.students.nomorepartiessbs.ru');
+    res.header('Access-Control-Allow-Origin', 'http://localhost:3001');
     res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
     res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization');
     return res.status(200).send();
